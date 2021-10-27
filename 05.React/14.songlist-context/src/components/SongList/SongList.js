@@ -1,23 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import './songlist.css';
-import canciones from '../../data/listaCanciones.json';
+import { useSongContext } from "../../context/SongContext";
 
 const SongList = () => {
-    const [List, setList] = useState([]);
 
-    useEffect(()=> {
-        setTimeout(() => {
-            setList(canciones);
-        }, 2000)
-    }, [])
+    const context = useSongContext();
 
     return (
         <section>
             {
-                List.length === 0
+                context.list.length === 0
                 ? <h1>Cargando</h1>
-                : List.map((song) => (
-                    <div className="row-song">
+                : context.list.map((song) => (
+                    <div key={song.id} className="row-song" onClick={()=> {
+                        context.setSelectedSong(song);
+                    }}>
                         <h4>{song.title}</h4>
                         <h5>{song.artist}</h5>
                     </div>

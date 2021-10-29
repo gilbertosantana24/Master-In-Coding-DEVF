@@ -1,19 +1,45 @@
 import React from 'react'
 import Navbar from '../Components/Navbar'
+import axios from 'axios';
+import useForm from '../Hook/useForm';
+import {useHistory} from 'react-router-dom';
 
 function Signup() {
+    let history = useHistory();
+    const sendData = (data) => {
+        if(data.password === data.password_confirm){
+            delete data.password_confirm
+                axios.post("https://ecomerce-master.herokuapp.com/api/v1/signup", data)
+                .then((response) => {
+                    if(response.status === 201) {
+                        console.log(response.status)
+                        history.push('/login')
+                    }
+                }).catch((error) => {
+                    alert(error.response.data)
+                })
+        }else{
+            alert("Password Not Match")
+        }
+        console.log(data)
+
+    }
+
+    const {input, handleInputChange, handleSubmit } =useForm (sendData,{})
+
+
     return (
         <div>
         <Navbar />
-        <form onSubmit="">
+        <form onSubmit={handleSubmit}>
             <div className="container mt-5">
                 <div className="row justify-content-center">
                     <div className="col-md-5">
                         <div className="form-group">
                             <label htmlFor="">Nombre</label>
                             <input type="text"
-                                value=""
-                                onChange=""
+                                value={input.first_name}
+                                onChange={handleInputChange}
                                 className="form-control"
                                 name="first_name"
                                 id="first_name"
@@ -25,8 +51,8 @@ function Signup() {
                         <div className="form-group">
                             <label htmlFor="">Apellidos</label>
                             <input type="text" 
-                                value=""
-                                onChange=""
+                                value={input.last_name}
+                                onChange={handleInputChange}
                                 className="form-control" 
                                 name="last_name" 
                                 id="last_name" 
@@ -38,8 +64,8 @@ function Signup() {
                         <div className="form-group">
                             <label htmlFor="">Email</label>
                                 <input type="email" 
-                                    value=""
-                                    onChange=""
+                                    value={input.email}
+                                    onChange={handleInputChange}
                                     className="form-control" 
                                     name="email" 
                                     id="email" 
@@ -51,8 +77,8 @@ function Signup() {
                         <div className="form-group">
                             <label htmlFor="">Password</label>
                             <input type="password"
-                                value=""
-                                onChange=""
+                                value={input.password}
+                                onChange={handleInputChange}
                                 className="form-control"
                                 name="password"
                                 id="password" 
@@ -64,8 +90,8 @@ function Signup() {
                         <div className="form-group">
                             <label htmlFor="">Confirmar password</label>
                             <input type="password" 
-                                value=""
-                                onChange=""
+                                value={input.password}
+                                onChange={handleInputChange}
                                 className="form-control" 
                                 name="password_confirm" 
                                 id="password_confirm" 
